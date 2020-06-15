@@ -4,11 +4,11 @@
 #include <string>
 
 #include <esr_radar/Object.h>
-#include <esr_radar/Objects.h>
+#include <esr_radar/ObjectArray.h>
 #include <can_msgs/FrameArray.h>
-#include<jsk_recognition_msgs/BoundingBox.h>
-#include<jsk_recognition_msgs/BoundingBoxArray.h>
-#include<cmath>
+#include <jsk_recognition_msgs/BoundingBox.h>
+#include <jsk_recognition_msgs/BoundingBoxArray.h>
+#include <cmath>
  
 
 class EsrRadar 
@@ -45,7 +45,7 @@ private:
 	jsk_recognition_msgs::BoundingBoxArray bbox_array_;
 	jsk_recognition_msgs::BoundingBox      bbox_;
 
-	esr_radar::Objects esr_objects_;
+	esr_radar::ObjectArray esr_objects_;
 	esr_radar::Object  esr_object_;
 	
 	bool is_sendMsgToEsr_;

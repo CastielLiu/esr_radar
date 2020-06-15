@@ -28,7 +28,7 @@ bool EsrRadar::init()
 	nh_private.param<bool>("is_sendMsgToEsr",is_sendMsgToEsr_,false);
 	
 	pub_bbox_    = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("/esr_bboxes",2);
-	pub_objects_ = nh.advertise<esr_radar::Objects>("/esr_objects",5);
+	pub_objects_ = nh.advertise<esr_radar::ObjectArray>("/esr_objects",5);
 	sub_can_     = nh.subscribe(from_can_topic_,100,&EsrRadar::canMsg_callback, this);
 	
 	ROS_INFO("esr radar initialization complete.");
