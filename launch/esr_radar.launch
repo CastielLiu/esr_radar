@@ -7,6 +7,8 @@
 		<!--配置滤波器 通道1全部接收; 通道2全不接收-->
 		<rosparam param="acc_code" >  [0xFFFFFFF,0x0] </rosparam>
 		<rosparam param="mask_code" > [0xFFFFFFF,0x0] </rosparam>
+		<param name ="from_can_topic"  type ="string"  value="/esr_radar/from_can_topic"/>
+		<param name ="to_can_topic"    type ="string"  value="/esr_radar/to_can_topic"/>
 	</node>
 	
 	<!--毫米波雷达驱动-->
