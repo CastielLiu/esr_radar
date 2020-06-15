@@ -106,9 +106,9 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 	{
 		uint8_t measurementStatus = (frame.data[1]&0xE0) >> 5;
 		
-		if(measurementStatus != NewTarget && 
-		   measurementStatus != UpdateTarget && 
-		   measurementStatus != CoastedTarget)
+		if(//measurementStatus != NewTarget && 
+		   measurementStatus != UpdateTarget /*&& 
+		   measurementStatus != CoastedTarget*/)
 			return;
 		
 		uint16_t u16_tempAngle = (frame.data[1] &0x1F);
@@ -134,7 +134,7 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 			s16_targetSpeed -= 8192;
 		
 		//计算角度时考虑安装偏差
-		float azimuth = s16_angle*0.1 - 1.2;  //left is negative(-) 
+		float azimuth = s16_angle*0.1 + 1.4;  //left is negative(-) 
 		float distance = u16_distance*0.1;
 		float speed = s16_targetSpeed*0.01; // m/s
 		

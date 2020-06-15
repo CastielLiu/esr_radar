@@ -14,7 +14,7 @@
 	<!--毫米波雷达驱动-->
 	<node name="esr_radar_node" pkg="esr_radar" type ="esr_radar_node" output="screen">
 		<param name ="is_sendMsgToEsr" type ="bool"  value="True"/>
-		<param name ="install_height"  type ="int"  value="20"/> <!--cm-->
+		<param name ="install_height"  type ="int"  value="5"/> <!--cm-->
 		<param name ="from_can_topic"  type ="string"  value="/esr_radar/from_can_topic"/>
 		<param name ="to_can_topic"    type ="string"  value="/esr_radar/to_can_topic"/>
 		
