@@ -25,8 +25,9 @@ bool EsrRadar::init()
 	
 	nh_private.param<std::string>("from_can_topic", from_can_topic_, "/from_usbcan");
 	nh_private.param<std::string>("to_can_topic", to_can_topic_, "/to_usbcan");
+	nh_private.param<int> ("install_height",install_height_,20); //cm
 	nh_private.param<bool>("is_sendMsgToEsr",is_sendMsgToEsr_,false);
-	
+
 	pub_bbox_    = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("/esr_bboxes",2);
 	pub_objects_ = nh.advertise<esr_radar::ObjectArray>("/esr_objects",5);
 	sub_can_     = nh.subscribe(from_can_topic_,100,&EsrRadar::canMsg_callback, this);
@@ -41,6 +42,7 @@ void EsrRadar::run()
 	if(is_sendMsgToEsr_)
 	{
 		ros::NodeHandle nh;
+		pub_can_ = nh.advertise<can_msgs::FrameArray>(to_can_topic_,5);
 		timer_ = nh.createTimer(ros::Duration(0.05),&EsrRadar::sendMsgToEsr,this);
 	}
 		
@@ -49,11 +51,19 @@ void EsrRadar::run()
 
 void EsrRadar::canMsg_callback(const can_msgs::FrameArray::ConstPtr& msg)
 {
-	if(msg->header.frame_id != "channel1") 
+	if(msg->header.frame_id != "r") 
 		return;
 
 	for(int i=0; i<msg->frames.size(); ++i)
 		parse_msg(msg->frames[i]);
+}
+
+void show_canmsg(const can_msgs::Frame &frame)
+{
+	cout << "ID:" << hex << frame.id << "\t";
+	for(size_t i=0;i<frame.len;i++)
+		printf("%x\t",frame.data[i]);
+	printf("\n");
 }
 
 void EsrRadar::parse_msg(const can_msgs::Frame &frame)
@@ -61,15 +71,8 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 	static uint16_t scan_index; 
 	static size_t last_frame_id = 0x0;
 
-	/*
-	cout << "ID:" << hex << frame.id << "\t";
-	for(size_t i=0;i<frame.len;i++)
-		printf("%x\t",frame.data[i]);
-	printf("\n");
-	*/
-	
 	//一帧目标获取完毕
-	if(frame.id == 0x4E0 || frame.id < last_frame_id)
+	if(frame.id == 0x4E0 /*|| frame.id < last_frame_id*/)
 	{
 		/*
 		if(frame.id == 0x4E0)
@@ -77,7 +80,9 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 		else
 			scan_index +=1;
 		*/
-		
+		esr_objects_.size = esr_objects_.objects.size();
+		if(esr_objects_.size == 0)
+			return;
 		pub_objects_.publish(esr_objects_);
 
 		if(pub_bbox_.getNumSubscribers())
@@ -176,6 +181,20 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 
 void EsrRadar::sendMsgToEsr(const ros::TimerEvent&)
 {
+	can_msgs::FrameArray frame_array;
+	can_msgs::Frame frame;
+	frame.id = 0x5F2;
+	frame.len = 8;
+	
+	uint8_t installHeight = 20;
+	 
+	frame.data[4] &= 0x80; //clear low 7bits
+	frame.data[4] |= installHeight & 0x7f;//install_height
+	
+	frame_array.frames.push_back(frame);
+	frame_array.header.frame_id = "w";
+	pub_can_.publish(frame_array);
+
 }
 
 int main(int argc,char **argv)

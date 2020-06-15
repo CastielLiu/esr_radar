@@ -1,7 +1,7 @@
 
 Header header
 
-uint16 sequence
+uint16 size
 
 Object[] objects
 

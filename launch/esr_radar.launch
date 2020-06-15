@@ -1,7 +1,20 @@
 <!-- -->
 <launch>
-
+	<!--can分析仪驱动-->
+	<node name="usbcan_driver_node" pkg="usbcan_driver" type="usbcan_driver_node" output="screen">
+		<rosparam param="baudrate" > [500,500] </rosparam>
+		<rosparam param="frame_id" > ["r","w"] </rosparam> <!--通道1读取，通道2发送-->
+		<!--配置滤波器 通道1全部接收; 通道2全不接收-->
+		<rosparam param="acc_code" >  [0xFFFFFFF,0x0] </rosparam>
+		<rosparam param="mask_code" > [0xFFFFFFF,0x0] </rosparam>
+	</node>
+	
+	<!--毫米波雷达驱动-->
 	<node name="esr_radar_node" pkg="esr_radar" type ="esr_radar_node" output="screen">
-		<param name ="is_sendMsgToEsr"  type ="bool"  value="False"/>
+		<param name ="is_sendMsgToEsr" type ="bool"  value="True"/>
+		<param name ="install_height"  type ="int"  value="20"/> <!--cm-->
+		<param name ="from_can_topic"  type ="string"  value="/esr_radar/from_can_topic"/>
+		<param name ="to_can_topic"    type ="string"  value="/esr_radar/to_can_topic"/>
+		
 	</node>
 </launch>

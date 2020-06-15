@@ -36,6 +36,7 @@ private:
 	
 private:
 	ros::Subscriber sub_can_;
+	ros::Publisher  pub_can_;
 	ros::Publisher  pub_bbox_;
 	ros::Publisher  pub_objects_;
 	
@@ -49,6 +50,7 @@ private:
 	esr_radar::Object  esr_object_;
 	
 	bool is_sendMsgToEsr_;
+	int  install_height_;
 	
 	ros::Timer timer_;
 	
