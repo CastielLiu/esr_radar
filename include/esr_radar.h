@@ -50,7 +50,8 @@ private:
 	esr_radar::Object  esr_object_;
 	
 	bool is_sendMsgToEsr_;
-	int  install_height_;
+	int  install_height_; //安装高度
+	float install_angle_; //安装水平倾角,左负右正
 	
 	ros::Timer timer_;
 	

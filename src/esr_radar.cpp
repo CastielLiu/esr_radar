@@ -25,8 +25,9 @@ bool EsrRadar::init()
 	
 	nh_private.param<std::string>("from_can_topic", from_can_topic_, "/from_usbcan");
 	nh_private.param<std::string>("to_can_topic", to_can_topic_, "/to_usbcan");
-	nh_private.param<int> ("install_height",install_height_,20); //cm
-	nh_private.param<bool>("is_sendMsgToEsr",is_sendMsgToEsr_,false);
+	nh_private.param<int>  ("install_height",install_height_,20); //cm
+	nh_private.param<float>("install_angle",install_angle_,0.0); //deg
+	nh_private.param<bool> ("is_sendMsgToEsr",is_sendMsgToEsr_,false);
 
 	pub_bbox_    = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("/esr_bboxes",2);
 	pub_objects_ = nh.advertise<esr_radar::ObjectArray>("/esr_objects",5);
@@ -133,8 +134,7 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 		if((frame.data[6]&0x20) !=0)
 			s16_targetSpeed -= 8192;
 		
-		//计算角度时考虑安装偏差
-		float azimuth = s16_angle*0.1 + 1.4;  //left is negative(-) 
+		float azimuth = s16_angle*0.1 + install_angle_;  //left is negative(-) 
 		float distance = u16_distance*0.1;
 		float speed = s16_targetSpeed*0.01; // m/s
 		
@@ -194,7 +194,6 @@ void EsrRadar::sendMsgToEsr(const ros::TimerEvent&)
 	frame_array.frames.push_back(frame);
 	frame_array.header.frame_id = "w";
 	pub_can_.publish(frame_array);
-
 }
 
 int main(int argc,char **argv)
