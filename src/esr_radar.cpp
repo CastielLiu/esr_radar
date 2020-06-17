@@ -108,8 +108,8 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 		uint8_t measurementStatus = (frame.data[1]&0xE0) >> 5;
 		
 		if(//measurementStatus != NewTarget && 
-		   measurementStatus != UpdateTarget /*&& 
-		   measurementStatus != CoastedTarget*/)
+		   measurementStatus != UpdateTarget && 
+		   measurementStatus != CoastedTarget)
 			return;
 		
 		uint16_t u16_tempAngle = (frame.data[1] &0x1F);
