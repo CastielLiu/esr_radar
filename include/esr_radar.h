@@ -8,8 +8,8 @@
 #include <can_msgs/FrameArray.h>
 #include <jsk_recognition_msgs/BoundingBox.h>
 #include <jsk_recognition_msgs/BoundingBoxArray.h>
+#include <diagnostic_msgs/DiagnosticStatus.h>
 #include <cmath>
- 
 
 class EsrRadar 
 {
@@ -39,12 +39,15 @@ private:
 	ros::Publisher  pub_can_;
 	ros::Publisher  pub_bbox_;
 	ros::Publisher  pub_objects_;
+	ros::Publisher  pub_diagnostic_;
 	
 	std::string from_can_topic_;
 	std::string to_can_topic_;
 	
 	jsk_recognition_msgs::BoundingBoxArray bbox_array_;
 	jsk_recognition_msgs::BoundingBox      bbox_;
+	
+	diagnostic_msgs::DiagnosticStatus diagnostic_msgs_;
 
 	esr_radar::ObjectArray esr_objects_;
 	esr_radar::Object  esr_object_;

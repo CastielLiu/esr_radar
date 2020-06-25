@@ -7,6 +7,7 @@ add_compile_options(-std=c++11)
 
 find_package(catkin REQUIRED COMPONENTS
   jsk_recognition_msgs
+  diagnostic_msgs
   message_generation
   roscpp
   rospy

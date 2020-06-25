@@ -16,6 +16,9 @@ EsrRadar::EsrRadar()
 
 	esr_objects_.header.frame_id = "esr_radar";
 	esr_objects_.objects.reserve(64);
+	
+	diagnostic_msgs_.hardware_id = "esr_radar";
+	diagnostic_msgs_.level = diagnostic_msgs_.OK;
 }
 
 bool EsrRadar::init()
@@ -32,6 +35,7 @@ bool EsrRadar::init()
 	pub_bbox_    = nh.advertise<jsk_recognition_msgs::BoundingBoxArray>("/esr_bboxes",2);
 	pub_objects_ = nh.advertise<esr_radar::ObjectArray>("/esr_objects",5);
 	sub_can_     = nh.subscribe(from_can_topic_,100,&EsrRadar::canMsg_callback, this);
+	pub_diagnostic_=nh.advertise<diagnostic_msgs::DiagnosticStatus>("/sensors/diagnostic",1);
 	
 	ROS_INFO("esr radar initialization complete.");
 	
@@ -99,6 +103,12 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 			bbox_array_.boxes.clear();
 		}
 		esr_objects_.objects.clear();
+		
+		static int diagnostic_cnt = 0;
+		if(pub_diagnostic_.getNumSubscribers() && (++diagnostic_cnt)%10==0)
+		{
+			pub_diagnostic_.publish(diagnostic_msgs_);
+		}
 	}
 	
 	last_frame_id = frame.id;
