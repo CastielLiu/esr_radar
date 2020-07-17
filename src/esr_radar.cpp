@@ -96,7 +96,8 @@ void EsrRadar::parse_msg(const can_msgs::Frame &frame)
 			{
 				bbox_.pose.position.x = object.x;
 				bbox_.pose.position.y = object.y;	
-				bbox_array_.boxes.push_back(bbox_);
+				//if(object.status != CoastedTarget)
+					bbox_array_.boxes.push_back(bbox_);
 			}
 			bbox_array_.header.stamp = esr_objects_.header.stamp;
 			pub_bbox_.publish(bbox_array_);
