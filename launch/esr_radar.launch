@@ -3,6 +3,9 @@
 
 	<!-- 传感器静态坐标变换                                                   x y z yaw pitch roll-->
 	<node pkg="tf" type="static_transform_publisher" name="mm_radar_tf" args="0 2.0 -0.6 0 0 0 base_link esr_radar 100" />
+	
+	 <!--这个貌似才是正确的, 需要明确以下车体航向以及大地坐标系!-->
+	<!-- node pkg="tf" type="static_transform_publisher" name="mm_radar_tf" args="2.0 0 -0.6 1.5707963 0 0 base_link esr_radar 100" /-->
 	<!--can分析仪驱动-->
 	<node name="usbcan_driver_node" pkg="usbcan_driver" type="usbcan_driver_node" output="screen">
 		<rosparam param="baudrate" > [500,500] </rosparam>
